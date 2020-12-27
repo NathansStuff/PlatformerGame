@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../entities/Player';
+import Birdman from '../entities/Birdman';
 
 class Play extends Phaser.Scene {
 
@@ -16,13 +17,23 @@ class Play extends Phaser.Scene {
         const map = this.createMap();
         const layers = this.createLayers(map);
         const playerZones = this.getPlayerZones(layers.playerZones);
-        const player = this.createPlayer(playerZones);
+        const player = this.createPlayer(playerZones.start);
+        const enemy = this.createEnemy();
+        
+        this.createEnemyColliders(enemy, {
+            colliders: {
+                platformColliders: layers.platformColliders,
+                player
+            }
+        });
         
         this.createPlayerColliders(player, {colliders: {
             platformColliders: layers.platformColliders
             }
         });
-    
+
+
+        this.createEndOfLevel(playerZones.end, player);
         this.setupFollowupCameraOn(player);
 
     }
@@ -32,6 +43,16 @@ class Play extends Phaser.Scene {
         map.addTilesetImage('main_lev_build_1', 'tiles-1');
         map.addTilesetImage('main_lev_build_2', 'tiles-2');
         return map;
+    }
+
+    createEnemy() {
+        return new Birdman(this, 200, 200)
+    }
+
+    createEnemyColliders(enemy, { colliders }) {
+        enemy
+            .addCollider(colliders.platformColliders)
+            .addCollider(colliders.player);
     }
 
     createLayers(map) {
@@ -51,7 +72,7 @@ class Play extends Phaser.Scene {
         return { environment, platforms, platformColliders, playerZones };
     }
 
-    createPlayer({start}) {
+    createPlayer(start) {
         return new Player(this, start.x, start.y);
     }
 
@@ -73,6 +94,18 @@ class Play extends Phaser.Scene {
             start: playerZones[0],
             end: playerZones[1]
         }
+    }
+
+    createEndOfLevel(end, player) {
+        const endOfLevel = this.physics.add.sprite(end.x, end.y, 'end')
+            .setAlpha(0)
+            .setOrigin(0.5)
+            .setSize(5, 200);
+
+        const endOfLevelOverlap = this.physics.add.overlap(player, endOfLevel, () => {
+            endOfLevelOverlap.active = false;
+            console.log('game over');
+        })
     }
 }
 
