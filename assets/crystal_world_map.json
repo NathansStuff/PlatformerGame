@@ -96,18 +96,6 @@
                  "width":0,
                  "x":400,
                  "y":176
-                }, 
-                {
-                 "height":0,
-                 "id":7,
-                 "name":"spawn",
-                 "point":true,
-                 "rotation":0,
-                 "type":"Birdman",
-                 "visible":true,
-                 "width":0,
-                 "x":912,
-                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
