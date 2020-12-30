@@ -39,12 +39,16 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this)
     }
 
-    update(time, delta) {
+    update(time) {
+        this.patrol(time);
+        
+    }
 
+    patrol(time, delta) {
+        if (!this.body || !this.bodyonFloor()) {return}
+        
         this.currentPatrolDistance += 1;
-
-
-
+        
         const {ray, hasHit} = this.raycast(this.body, this.platformCollidersLayer);
 
         if ( (!hasHit || this.currentPatrolDistance >= this.maxPatrolDistance) && (this.timeFromLastTurn + 700 < time)  ) {
