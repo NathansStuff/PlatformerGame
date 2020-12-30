@@ -10,7 +10,7 @@ export default {
     prevRay: null,
     prevHasHit: null,
 
-    raycast(body, layer, rayLength = 30, precision = 0) {
+    raycast(body, layer, {rayLength = 30, precision = 0, steepness = 1}) {
         const { x, y, width, halfHeight } = body;
 
         this.bodyPositionDifferenceX += body.x - body.prev.x;
@@ -29,14 +29,14 @@ export default {
             case Phaser.Physics.Arcade.FACING_RIGHT: {
                 line.x1 = x + width;
                 line.y1 = y + halfHeight;
-                line.x2 = line.x1 + rayLength;
+                line.x2 = line.x1 + rayLength * steepness;
                 line.y2 = line.y1 + rayLength;
                 break;
             }
             case Phaser.Physics.Arcade.FACING_LEFT: {
                 line.x1 = x;
                 line.y1 = y + halfHeight;
-                line.x2 = line.x1 - rayLength;
+                line.x2 = line.x1 - rayLength * steepness;
                 line.y2 = line.y1 + rayLength;
                 break;
             }

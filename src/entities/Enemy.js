@@ -45,11 +45,11 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     patrol(time, delta) {
-        if (!this.body || !this.bodyonFloor()) {return}
+        if (!this.body || !this.body.onFloor()) {return}
         
         this.currentPatrolDistance += 1;
         
-        const {ray, hasHit} = this.raycast(this.body, this.platformCollidersLayer);
+        const {ray, hasHit} = this.raycast(this.body, this.platformCollidersLayer, {steepness: 0.4});
 
         if ( (!hasHit || this.currentPatrolDistance >= this.maxPatrolDistance) && (this.timeFromLastTurn + 700 < time)  ) {
             this.setFlipX(!this.flipX);
