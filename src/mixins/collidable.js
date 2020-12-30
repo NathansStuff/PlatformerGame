@@ -22,8 +22,6 @@ export default {
             }
         }
 
-        console.log('ray')
-
         const line = new Phaser.Geom.Line();
         let hasHit = false;
 
