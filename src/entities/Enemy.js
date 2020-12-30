@@ -54,7 +54,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         if ( (!hasHit || this.currentPatrolDistance >= this.maxPatrolDistance) && (this.timeFromLastTurn + 700 < time)  ) {
             this.setFlipX(!this.flipX);
             this.setVelocityX(this.speed = -this.speed);
-            console.log(this.timeFromLastTurn);
+            // console.log(this.timeFromLastTurn);
             this.timeFromLastTurn = time;
         }
 
