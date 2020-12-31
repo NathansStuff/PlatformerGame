@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Player from '../entities/Player';
-import Enemies from '../groups/Enemies'
+import Enemies from '../groups/Enemies';
+import initAnims from '../anims';
 
 
 class Play extends Phaser.Scene {
@@ -36,6 +37,8 @@ class Play extends Phaser.Scene {
 
         this.createEndOfLevel(playerZones.end, player);
         this.setupFollowupCameraOn(player);
+
+        initAnims(this.anims);
     }
 
     drawDebug(layer) {
