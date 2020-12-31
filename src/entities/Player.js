@@ -76,10 +76,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         if (this.hasBeenHit) {return}
-        const { left, right, space, up } = this.cursors;
+        const { left, right, space, up, down } = this.cursors;
         const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(space);
         const isUpJustDown = Phaser.Input.Keyboard.JustDown(up);
         const onFloor = this.body.onFloor();
+
+        if (down.isDown && onFloor) {
+            this.body.setSize(this.width, this.height / 2);
+            this.setOffset(0, this.height / 2);
+            this.setVelocityX(0)
+          } else {
+            this.body.setSize(this.width, 38);
+            this.setOffset(0, 0);
+          }
 
         if (left.isDown) {
             this.setVelocityX(-this.playerSpeed)
@@ -98,7 +107,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.jumpCount++;
         }
 
-        if (this.isPlayingAnims('throw')) {return;}
+        if (down.isDown) {
+            this.play('slide', true);
+          }
+
+        if (this.isPlayingAnims('throw') || this.isPlayingAnims('slide')) {return;}
 
         if (onFloor) {
             this.jumpCount = 0;
