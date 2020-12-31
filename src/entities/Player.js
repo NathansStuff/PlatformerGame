@@ -29,6 +29,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.jumpCount = 0;
         this.consecutiveJumps = 1;
         this.hasBeenHit = false;
+        this.isSliding = false;
         this.bounceVelocity = 250;
         this.cursors = this.scene.input.keyboard.createCursorKeys();
 
@@ -48,26 +49,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.scene.config.leftTopCorner.x + 5, 
             this.scene.config.leftTopCorner.y + 5, 
             2,
-            this.health);
+            this.health);   
+
+        this.handleAttacks();
+        this.handleMovements();
             
-            this.scene.input.keyboard.on('keydown-Q', () => {
-                this.play('throw', true);
-                this.projectiles.fireProjectile(this, 'iceball');
-                
-            
-            })
-
-            this.scene.input.keyboard.on('keydown-E', () => {
-
-                if (this.timeFromLastSwing &&
-                    this.timeFromLastSwing + this.meleeWeapon.attackSpeed > getTimestamp()) {
-                      return;
-                }
-
-                this.play('throw', true);
-                this.meleeWeapon.swing(this);
-                this.timeFromLastSwing = getTimestamp();
-            })
     }
 
     initEvents() {
@@ -75,20 +61,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        if (this.hasBeenHit) {return}
+        if (this.hasBeenHit || this.isSliding) {return}
         const { left, right, space, up, down } = this.cursors;
         const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(space);
         const isUpJustDown = Phaser.Input.Keyboard.JustDown(up);
         const onFloor = this.body.onFloor();
-
-        if (down.isDown && onFloor) {
-            this.body.setSize(this.width, this.height / 2);
-            this.setOffset(0, this.height / 2);
-            this.setVelocityX(0)
-          } else {
-            this.body.setSize(this.width, 38);
-            this.setOffset(0, 0);
-          }
 
         if (left.isDown) {
             this.setVelocityX(-this.playerSpeed)
@@ -157,6 +134,44 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             tint: 0xffffff, 
         });
     }
+
+    handleAttacks() {
+        this.scene.input.keyboard.on('keydown-Q', () => {
+            this.play('throw', true);
+            this.projectiles.fireProjectile(this, 'iceball');
+            
+        
+        })
+        this.scene.input.keyboard.on('keydown-E', () => {
+
+            if (this.timeFromLastSwing &&
+                this.timeFromLastSwing + this.meleeWeapon.attackSpeed > getTimestamp()) {
+                  return;
+            }
+
+            this.play('throw', true);
+            this.meleeWeapon.swing(this);
+            this.timeFromLastSwing = getTimestamp();
+        })
+    }
+
+    handleMovements() {
+        this.scene.input.keyboard.on('keydown-DOWN', () => {
+        //   if (!this.body.onFloor()) { return; }
+    
+          this.body.setSize(this.width, this.height / 2);
+          this.setOffset(0, this.height / 2);
+          this.setVelocityX(0)
+          this.play('slide', true);
+          this.isSliding = true;
+        })
+    
+        this.scene.input.keyboard.on('keyup-DOWN', () => {
+          this.body.setSize(this.width, 38);
+          this.setOffset(0, 0);
+          this.isSliding = false;
+        })
+      }
 
 }
 
