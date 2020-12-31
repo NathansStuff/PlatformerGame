@@ -30,7 +30,8 @@ class Play extends Phaser.Scene {
         });
         
         this.createPlayerColliders(player, {colliders: {
-            platformColliders: layers.platformColliders
+            platformColliders: layers.platformColliders,
+            projectiles: enemies.getProjectiles()
             }
         });
 
@@ -133,6 +134,7 @@ class Play extends Phaser.Scene {
     createPlayerColliders(player, {colliders}) {
         player 
             .addCollider(colliders.platformColliders)
+            .addCollider(colliders.projectiles, this.onWeaponHit);
     }
 
     setupFollowupCameraOn(player) {
