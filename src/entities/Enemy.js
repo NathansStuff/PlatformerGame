@@ -54,6 +54,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.patrol(time);
     }
 
+    deliversHit() {}
+
     patrol(time, delta) {
         if (!this.body || !this.body.onFloor()) {return}
         
