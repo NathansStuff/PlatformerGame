@@ -38,7 +38,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.setSize(20,36);
         this.setCollideWorldBounds(true);
         this.setOrigin(0.5, 1)
-        this.projectiles = new Projectiles(this.scene);
+        this.projectiles = new Projectiles(this.scene, 'iceball');
         this.meleeWeapon = new MeleeWeapon(this.scene, 0, 0, 'sword-default');
         this.timeFromLastSwing = null;
 
