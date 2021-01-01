@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
         const player = this.createPlayer(playerZones.start);
         const enemies = this.createEnemies(layers.enemySpawns, layers.platformColliders);
         const collectables = this.createCollectables(layers.collectables);
-        const hud = new Hud(this, 0, 0);
+        this.hud = new Hud(this, 0, 0);
         
         this.createEnemyColliders(enemies, {
             colliders: {
@@ -165,7 +165,8 @@ class Play extends Phaser.Scene {
         // disableGameObject -> this will deactivate the object, default: false
         // hideGameObject -> this will hide the game object. Default: false
         this.score += collectable.score;
-        console.log(this.score);
+        this.hud.updateScoreboard(this.score);
+    collectable.disableBody(true, true);
         collectable.disableBody(true, true);
 
       }
