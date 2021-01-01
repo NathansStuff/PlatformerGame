@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import Player from '../entities/Player';
 import Enemies from '../groups/Enemies';
 import initAnims from '../anims';
-import Collectable from '../collectables/Collectable';
+import Collectables from '../groups/Collectables';
 
 
 class Play extends Phaser.Scene {
@@ -152,18 +152,16 @@ class Play extends Phaser.Scene {
     }
 
     createCollectables(collectableLayer) {
-        const collectables = this.physics.add.staticGroup().setDepth(-1);
-
+        const collectables = new Collectables(this).setDepth(-1);
+    
         collectableLayer.objects.forEach(collectableO => {
-            collectables.add(new Collectable(this, collectableO.x, collectableO.y, 'diamond'));
+          collectables.get(collectableO.x, collectableO.y, 'diamond')
         })
     
         collectables.playAnimation('diamond-shine');
-        debugger
-
-        return collectables;
     
-    }
+        return collectables;
+      }
 
     onCollect(entity, collectable) {
         // disableGameObject -> this will deactivate the object, default: false
