@@ -21,6 +21,7 @@ class Play extends Phaser.Scene {
         const playerZones = this.getPlayerZones(layers.playerZones);
         const player = this.createPlayer(playerZones.start);
         const enemies = this.createEnemies(layers.enemySpawns, layers.platformColliders);
+        const collectables = this.createCollectables(layers.collectables);
         
         this.createEnemyColliders(enemies, {
             colliders: {
@@ -31,7 +32,8 @@ class Play extends Phaser.Scene {
         
         this.createPlayerColliders(player, {colliders: {
             platformColliders: layers.platformColliders,
-            projectiles: enemies.getProjectiles()
+            projectiles: enemies.getProjectiles(),
+            collectables
             }
         });
 
@@ -115,16 +117,24 @@ class Play extends Phaser.Scene {
         const tileset2 = map.getTileset('main_lev_build_2');
         const platformColliders = map.createStaticLayer('platform_colliders', [tileset1,tileset2]);
 
-        const environment = map.createStaticLayer('environment', [tileset1, tileset2]);
+        const environment = map.createStaticLayer('environment', [tileset1, tileset2]).setDepth(-2);
         const platforms = map.createStaticLayer('platforms', [tileset1,tileset2]);
 
         const playerZones = map.getObjectLayer('player_zones');
         
         const enemySpawns = map.getObjectLayer('enemy_spawns');
 
+        const collectables = map.getObjectLayer('collectables');
+
         platformColliders.setCollisionByExclusion(-1, true);
 
-        return { environment, platforms, platformColliders, playerZones, enemySpawns };
+        return { 
+            environment, 
+            platforms, 
+            platformColliders, 
+            playerZones, 
+            enemySpawns,
+            collectables };
     }
 
     createPlayer(start) {
@@ -134,8 +144,27 @@ class Play extends Phaser.Scene {
     createPlayerColliders(player, {colliders}) {
         player 
             .addCollider(colliders.platformColliders)
-            .addCollider(colliders.projectiles, this.onWeaponHit);
+            .addCollider(colliders.projectiles, this.onWeaponHit)
+            .addOverlap(colliders.collectables, this.onCollect);
     }
+
+    createCollectables(collectableLayer) {
+        const collectables = this.physics.add.staticGroup();
+
+        collectableLayer.objects.forEach(collectableO => {
+          collectables.get(collectableO.x, collectableO.y, 'diamond').setDepth(-1);
+        })
+    
+        return collectables;
+    
+    }
+
+    onCollect(entity, collectable) {
+        // disableGameObject -> this will deactivate the object, default: false
+        // hideGameObject -> this will hide the game object. Default: false
+        collectable.disableBody(true, true);
+        console.log('coll')
+      }
 
     setupFollowupCameraOn(player) {
         const { height, width, mapOffset, zoomFactor } = this.config;
