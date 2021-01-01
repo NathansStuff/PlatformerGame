@@ -1,15 +1,15 @@
 import Phaser from 'phaser';
 
 export default {
-    addCollider(otherGameObject, callback) {
-        this.scene.physics.add.collider(this, otherGameObject, callback, null, this);
-        return this;
-    },
-    addOverlap(otherGameobject, callback) {
-        this.scene.physics.add.overlap(this, otherGameobject, callback, null, this);
+    addCollider(otherGameobject, callback, context) {
+        this.scene.physics.add.collider(this, otherGameobject, callback, null, context || this);
         return this;
       },
 
+    addOverlap(otherGameobject, callback, context) {
+        this.scene.physics.add.overlap(this, otherGameobject, callback, null, context || this);
+        return this;
+    },
     bodyPositionDifferenceX: 0,
     prevRay: null,
     prevHasHit: null,
