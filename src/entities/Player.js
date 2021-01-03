@@ -100,19 +100,22 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.play('jump', true);
     }
 
-    bounceOff() {
-        this.body.touching.right ?
-            this.setVelocity(-this.bounceVelocity) :
-            this.setVelocity(this.bounceVelocity)
-        
-            setTimeout(() => this.setVelocityY(-this.bounceVelocity), 0);
-
+    bounceOff(source) {
+        if (source.body) {
+          this.body.touching.right ?
+            this.setVelocityX(-this.bounceVelocity) :
+            this.setVelocityX(this.bounceVelocity);
+        } else {
+          this.body.blocked.right ?
+            this.setVelocityX(-this.bounceVelocity / 2) :
+            this.setVelocityX(this.bounceVelocity / 2);
+        }
     }
 
     takesHit(source) {
         if (this.hasBeenHit) {return}
         this.hasBeenHit = true;
-        this.bounceOff();
+        this.bounceOff(source);
         const hitAnim = this.playDamageTween();
 
         this.health -= source.damage || source.properties.damage || 0;
