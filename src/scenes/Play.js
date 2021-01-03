@@ -106,7 +106,7 @@ class Play extends Phaser.Scene {
         player.takesHit(enemy);
     }
 
-    onWeaponHit(entity, source) {
+    onHit(entity, source) {
         entity.takesHit(source);
       }
 
@@ -114,8 +114,8 @@ class Play extends Phaser.Scene {
         enemies
             .addCollider(colliders.platformColliders)
             .addCollider(colliders.player, this.onPlayerCollision)
-            .addCollider(colliders.player.projectiles, this.onWeaponHit)
-            .addOverlap(colliders.player.meleeWeapon, this.onWeaponHit);
+            .addCollider(colliders.player.projectiles, this.onHit)
+            .addOverlap(colliders.player.meleeWeapon, this.onHit);
     }
 
     createLayers(map) {
@@ -155,9 +155,9 @@ class Play extends Phaser.Scene {
     createPlayerColliders(player, {colliders}) {
         player 
             .addCollider(colliders.platformColliders)
-            .addCollider(colliders.projectiles, this.onWeaponHit)
+            .addCollider(colliders.projectiles, this.onHit)
             .addOverlap(colliders.collectables, this.onCollect, this)
-            .addCollider(colliders.traps, () => { console.log('we got hit!')})
+            .addCollider(colliders.traps, this.onHit)
 
 
     }
